@@ -69,7 +69,7 @@
         <h2>7. Da quanti dipartimenti è composta l'università? (12)</h2>
 
         <p>
-            SELECT COUNT(id) AS `numero_dipartimenti` 
+            SELECT COUNT(`id`) AS `numero_dipartimenti` 
             FROM `departments`;
         </p>
     
@@ -83,20 +83,35 @@
     
         <h2>9. Contare quanti iscritti ci sono stati ogni anno</h2>
 
-        <p></p>
+        <p>
+            SELECT YEAR(`enrolment_date`) AS `anno_iscrizione`, COUNT(`id`) AS `totale_iscritti` 
+            FROM `students` 
+            GROUP BY YEAR(`enrolment_date`);
+        </p>
     
         <h2>10. Contare gli insegnanti che hanno l'ufficio nello stesso edificio</h2>
 
-        <p></p>
+        <p>
+            SELECT `office_address`, COUNT(`id`) AS `numero_insegnanti` 
+            FROM `teachers` 
+            GROUP BY `office_address`;
+        </p>
     
         <h2>11. Calcolare la media dei voti di ogni appello d'esame</h2>
 
-        <p></p>
+        <p>
+            SELECT `exam_id`, AVG(`vote`) AS `voto_medio-esame` 
+            FROM `exam_student` 
+            GROUP BY `exam_id`;
+        </p>
     
         <h2>12. Contare quanti corsi di laurea ci sono per ogni dipartimento</h2>
 
-        <p></p>
-
+        <p>
+            SELECT `department_id` AS `dipartimento`, COUNT(`name`) AS `numero_corsi_di_laurea` 
+            FROM `degrees` 
+            GROUP BY `department_id`;
+        </p>
     </div>
 </body>
 </html>
