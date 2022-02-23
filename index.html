@@ -36,8 +36,7 @@
         <p>
             SELECT *
             FROM `students`
-            WHERE `date_of_birth` < "1992-02-22"
-            ORDER BY `students`.`date_of_birth` ASC;
+            WHERE TIMESTAMPDIFF(YEAR, `date_of_birth`, CURDATE()) > 30;
         </p>
     
         <h2>4. Selezionare tutti i corsi del primo semestre del primo anno di un qualsiasi corso di laurea (286)</h2>
@@ -55,7 +54,13 @@
             SELECT * 
             FROM `exams` 
             WHERE `date` = "2020-06-20" 
-            AND `hour` > "14:00:00"
+            AND `hour` > "14:00:00";
+
+    <!--    SELECT * 
+            FROM `exams` 
+            WHERE `date` = "2020-06-20" 
+            AND HOUR(`hour`) > "14";
+    -->
         </p>
 
         <h2>6. Selezionare tutti i corsi di laurea magistrale (38)</h2>
@@ -76,7 +81,7 @@
         <h2>8. Quanti sono gli insegnanti che non hanno un numero di telefono? (50)</h2>
 
         <p>
-            SELECT * 
+            SELECT COUNT(*) 
             FROM `teachers` 
             WHERE `phone` IS NULL;
         </p>
@@ -108,7 +113,7 @@
         <h2>12. Contare quanti corsi di laurea ci sono per ogni dipartimento</h2>
 
         <p>
-            SELECT `department_id` AS `dipartimento`, COUNT(`name`) AS `numero_corsi_di_laurea` 
+            SELECT `department_id` AS `dipartimento`, COUNT(*) AS `numero_corsi_di_laurea` 
             FROM `degrees` 
             GROUP BY `department_id`;
         </p>
