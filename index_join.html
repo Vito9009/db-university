@@ -81,7 +81,7 @@
         <h2>7. BONUS: Selezionare per ogni studente quanti tentativi d’esame ha sostenuto per superare ciascuno dei suoi esami</h2>
 
         <p>
-            <!--HAVING consente di impostare un filtro sui valori raggrupati-->
+            <!--HAVING consente di impostare un filtro sui valori raggrupati. Questa clausola si inserisce subito dopo GROUP BY-->
 
             SELECT COUNT(`exam_student`.`vote`) AS `numero_tentativi_per_singolo_esame`, `students`.`surname` AS `cognome_studente`, `students`.`name` AS `nome_studente`, `courses`.`name` AS `esame`, MAX(`vote`) AS `voto_superamento_esame`
             FROM `students`
