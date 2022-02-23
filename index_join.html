@@ -81,7 +81,16 @@
         <h2>7. BONUS: Selezionare per ogni studente quanti tentativi d’esame ha sostenuto per superare ciascuno dei suoi esami</h2>
 
         <p>
-            
+            <!--HAVING consente di impostare un filtro sui valori raggrupati-->
+
+            SELECT COUNT(`exam_student`.`vote`) AS `numero_tentativi_per_singolo_esame`, `students`.`surname` AS `cognome_studente`, `students`.`name` AS `nome_studente`, `courses`.`name` AS `esame`, MAX(`vote`) AS `voto_superamento_esame`
+            FROM `students`
+            INNER JOIN `exam_student` ON `students`.`id` = `exam_student`.`student_id`
+            INNER JOIN `exams` ON `exam_student`.`exam_id` = `exams`.`id`
+            INNER JOIN `courses` ON `exams`.`course_id` = `courses`.`id`
+            INNER JOIN `degrees` ON `courses`.`degree_id` = `degrees`.`id`
+            GROUP BY `students`.`surname`, `students`.`name`, `courses`.`name`
+            HAVING MAX(`vote`) >= 18
         </p>
     </div>
 </body>
