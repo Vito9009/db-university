@@ -19,7 +19,7 @@
         <p>
             SELECT *
             FROM `students`
-            INNER JOIN `degrees` on `students`.`degree_id` = `degrees`.`id`
+            INNER JOIN `degrees` ON `students`.`degree_id` = `degrees`.`id`
             WHERE `degrees`.`name` = "Corso di Laurea in Economia";
         </p>
 
@@ -35,7 +35,8 @@
         <h2>3. Selezionare tutti i corsi in cui insegna Fulvio Amato (id=44)</h2>
 
         <p>
-            SELECT `teachers`.`id` AS `id_docente`, `teachers`.`name` AS `nome_docente`, `teachers`.`surname` AS `cognome_docente`, `courses`.`name` AS `nome_corso`
+            SELECT `teachers`.`id` AS `id_docente`, `teachers`.`name` AS `nome_docente`, `teachers`.`surname` AS `cognome_docente`, 
+            `courses`.`name` AS `nome_corso`
             FROM `teachers`
             INNER JOIN `course_teacher` ON `teachers`.`id` = `course_teacher`.`teacher_id`
             INNER JOIN `courses` ON `course_teacher`.`course_id` = `courses`.`id`
@@ -49,7 +50,7 @@
             FROM `students`
             INNER JOIN `degrees` ON `students`.`degree_id` = `degrees`.`id`
             INNER JOIN `departments` ON `degrees`.`department_id` = `departments`.`id`
-            ORDER BY `students`.`surname`, `students`.`name`;
+            ORDER BY `students`.`surname`, `students`.`name` ASC;
         </p>
     
         <h2>5. Selezionare tutti i corsi di laurea con i relativi corsi e insegnanti</h2>
@@ -83,14 +84,46 @@
         <p>
             <!--HAVING consente di impostare un filtro sui valori raggrupati. Questa clausola si inserisce subito dopo GROUP BY-->
 
-            SELECT COUNT(`exam_student`.`vote`) AS `numero_tentativi_per_singolo_esame`, `students`.`surname` AS `cognome_studente`, `students`.`name` AS `nome_studente`, `courses`.`name` AS `esame`, MAX(`vote`) AS `voto_superamento_esame`
+            SELECT COUNT(`exam_student`.`vote`) AS `numero_tentativi_per_singolo_esame`, `students`.`surname` AS `cognome_studente`, 
+            `students`.`name` AS `nome_studente`, `courses`.`name` AS `esame`, MAX(`vote`) AS `voto_superamento_esame`
             FROM `students`
             INNER JOIN `exam_student` ON `students`.`id` = `exam_student`.`student_id`
             INNER JOIN `exams` ON `exam_student`.`exam_id` = `exams`.`id`
             INNER JOIN `courses` ON `exams`.`course_id` = `courses`.`id`
             INNER JOIN `degrees` ON `courses`.`degree_id` = `degrees`.`id`
-            GROUP BY `students`.`surname`, `students`.`name`, `courses`.`name`
+            GROUP BY `students`.`id`, `courses`.`id`
             HAVING MAX(`vote`) >= 18
+
+            <!--
+                SOLUZIONE SIMONE
+                
+                SELECT `students`.`id`, `students`.`name`, `students`.`surname`, `courses`.`name`, 
+                COUNT(`exam_student`.`vote`) AS `numero_tentativi`, 
+                MAX(`exam_student`.`vote`) AS `voto_massimo`
+
+                FROM `students`
+                INNER JOIN `exam_student` ON `students`.`id` = `exam_student`.`student_id` 
+                INNER JOIN `exams` ON `exam_student`.`exam_id` = `exams`.`id`
+                INNER JOIN `courses` ON `exams`.`course_id` = `courses`.`id`
+
+                GROUP BY `students`.`id`, `courses`.`id`
+                HAVING `voto_massimo` >= 18
+            -->
+
+            <!--
+                SOLUZIONE MILAN
+
+                SELECT `student_id` AS `studente`,  `exams`.`course_id` AS `esame`, 
+                COUNT(`courses`.`id`) AS `tentativi`, 
+                COUNT(CASE WHEN `exam_student`.`vote` <18 THEN 1 END) AS `fallimenti`,
+                (COUNT(`courses`.`id`) - COUNT(CASE WHEN `exam_student`.`vote` <18 THEN 1 END)) AS `superato`
+                FROM `exam_student`
+                INNER JOIN `exams` ON `exams`.`id` = `exam_student`.`exam_id`
+                INNER JOIN `courses` ON `courses`.`id` = `exams`.`course_id`
+                GROUP BY `studente`, `esame`
+                HAVING `superato` > 0
+                ORDER BY `studente` ASC
+            -->
         </p>
     </div>
 </body>
